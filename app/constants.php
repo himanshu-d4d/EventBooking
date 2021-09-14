@@ -1,0 +1,20 @@
+<?php
+//THE REQUEST HAS SUCCESS
+define('HTTP_OK','200'); 
+define('HTTP_NOT_FOUND','404');
+
+
+//// This REQUEST HAS CREATED NEW 
+
+define('HTTP_CREATED','201');
+define('HTTP_ACCEPTED','202'); 
+
+
+/////THIS REQUEST HAS UNAUTHORIZED
+
+define('HTTP_UNAUTHORIZED','401');
+define('HTTP_BED_REQUESTED','400');
+/////HTTP ERROR
+define('HTTP_SERVER_ERROR','500');
+define('HTTP_VALIDATION_ERROR','512');
+?>
