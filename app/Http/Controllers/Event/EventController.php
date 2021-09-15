@@ -79,16 +79,16 @@ class EventController extends Controller
                 $UserID = User::where('id', $guest['guest_id'])->first();
                 //dd($eventName);
                 //echo $eventName['is_attend']; die;
-                $Status = [];
-                // if($eventName['is_attend']==2){
-                //     $UserAttendStatus = 'no_response';
+                // $Status = [];
+                // // if($eventName['is_attend']==2){
+                // //     $UserAttendStatus = 'no_response';
+                // // }
+                // if($eventName['is_attend']==1){
+                //     $Status = 'attend';
                 // }
-                if($eventName['is_attend']==1){
-                    $Status = 'attend';
-                }
-                else {
-                    $Status = 'not_attend';
-                }
+                // else {
+                //     $Status = 'not_attend';
+                // }
                 //dd($UserAttendStatus);
                 $guest = new EventsBooking;
                $guest->event_id = $request->event_id;
@@ -96,7 +96,7 @@ class EventController extends Controller
                //dd($guest);
                 $guest->save();
                 $user_data = ['user_name'=>$user['name'], 'user_image'=>$user['image']];
-                Notification::send($UserID, new Eventnotification($user['name'].' '.'invited you to his event   '.' '.$eventName['ename'],$user_data, "USER_EVENT_GUEST_ADD",$Status));
+                Notification::send($UserID, new Eventnotification($user['name'].' '.'invited you to his event   '.' '.$eventName['ename'],$user_data, "USER_EVENT_GUEST_ADD"));
                 return response()->json(['status' => 'success', 'message' => 'Event Booked'],  HTTP_OK,);
             }else{
                 return response()->json(['status' => 'error', 'message' => 'Event Or Guest Does Not Exits'],  HTTP_NOT_FOUND,);
@@ -517,7 +517,27 @@ class EventController extends Controller
            }      
         
       }
-
-
-
+        public function getExpiredEvents(){
+               try{
+                $today = date("Y-m-d");
+                   $AllEvents = Event::where('date','<',$today )->get();
+                   //dd($AllEvents->toArray());
+            return response()->json(['status' => 'success', 'message' =>'list get successfully','expired-events'=> $AllEvents], HTTP_OK,);
+               }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+           } 
+        }
+        public function GetLimitEvents(){
+            try{
+                // $result = EventsBooking::groupBy('event_id')
+                // ->where('status','>=', 10)
+                // ->select('event_id')
+                // ->get();
+                $result = DB::select('SELECT COUNT(events_booking.event_id) as total_attending_guest,events_booking.event_id, events_booking.status, events.* FROM events_booking JOIN events ON events.id =events_booking.event_id WHERE events_booking.status = :status GROUP BY events_booking.event_id HAVING COUNT(events_booking.event_id) >= :event_count', ['status' => 1,'event_count'=>10]);
+                return response()->json(['status' => 'success', 'message' =>'list get successfully','data'=> $result], HTTP_OK,);
+                // dd($result);
+            }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+           } 
+        }
 }

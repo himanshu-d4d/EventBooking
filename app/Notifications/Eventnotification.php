@@ -18,13 +18,13 @@ class Eventnotification extends Notification
      * @return void
      */
     protected $notification_type;
-    public function __construct($ename,$user_data,$notification_type,$UserAttendStatus)
+    public function __construct($ename,$user_data,$notification_type)
     {
         // echo $notification_type; die;
         $this->name = $ename;
         $this->notification_type = $notification_type;
         $this->data = $user_data;
-        $this->UserAttendStatus = $UserAttendStatus;
+        //$this->UserAttendStatus = $UserAttendStatus;
     }
 
     /**
@@ -64,7 +64,7 @@ class Eventnotification extends Notification
             'message'=> $this->name,
             'user_data'=> $this->data,
             'notification_type' => $this->notification_type,
-            'user_attend_status'=>$this->UserAttendStatus
+            //'user_attend_status'=>$this->UserAttendStatus
         ];
         
     }

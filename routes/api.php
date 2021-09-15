@@ -57,4 +57,8 @@ use App\Http\Controllers\Event\EventBookingController;
     Route::get('notification-delete/{id}', [EventController::class, 'DeleteNotification']);
     Route::post('notification-filetr-search', [EventController::class, 'FilterNotification']);
     Route::post('notification-multiplefiletr', [EventController::class, 'FilterNotificationMultiple']);
+    Route::get('get-expired-events', [EventController::class, 'getExpiredEvents']);
+    Route::get('get-limit-events', [EventController::class, 'GetLimitEvents']);
+
+
 }); 
