@@ -23,7 +23,7 @@ use App\Http\Controllers\Event\EventBookingController;
 /////Passport Auth Routes///
 
     Route::post('register', [apis::class, 'register']);
-    Route::post('login', [apis::class, 'login']);
+    Route::post('login', [apis::class, 'login'])->middleware('throttle:login');
     Route::get('login', [apis::class, 'login'])->name('login');
 
 //forget password routes//
@@ -59,6 +59,5 @@ use App\Http\Controllers\Event\EventBookingController;
     Route::post('notification-multiplefiletr', [EventController::class, 'FilterNotificationMultiple']);
     Route::get('get-expired-events', [EventController::class, 'getExpiredEvents']);
     Route::get('get-limit-events', [EventController::class, 'GetLimitEvents']);
-
 
 }); 

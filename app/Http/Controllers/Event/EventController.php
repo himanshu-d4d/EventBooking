@@ -529,12 +529,19 @@ class EventController extends Controller
         }
         public function GetLimitEvents(){
             try{
-                // $result = EventsBooking::groupBy('event_id')
-                // ->where('status','>=', 10)
-                // ->select('event_id')
-                // ->get();
-                $result = DB::select('SELECT COUNT(events_booking.event_id) as total_attending_guest,events_booking.event_id, events_booking.status, events.* FROM events_booking JOIN events ON events.id =events_booking.event_id WHERE events_booking.status = :status GROUP BY events_booking.event_id HAVING COUNT(events_booking.event_id) >= :event_count', ['status' => 1,'event_count'=>10]);
-                return response()->json(['status' => 'success', 'message' =>'list get successfully','data'=> $result], HTTP_OK,);
+                $user = Auth::user();
+                $result = DB::table('events_booking')
+                ->select('status','events.*',DB::raw('COUNT(events_booking.event_id) as total_attending_guest'))
+                ->join('events', 'events.id', '=', 'events_booking.event_id')
+                ->where('status',1 )
+                //->orWhere('events_booking.event_id','>=',10 )
+                ->groupBy('events_booking.event_id')
+                ->havingRaw('total_attending_guest >= 10 ')
+                ->get();
+                //dd($result);
+                // $result = DB::select('SELECT COUNT(events_booking.event_id) as total_attending_guest,events_booking.event_id, events_booking.status, events.* FROM events_booking JOIN events ON events.id =events_booking.event_id
+                //  WHERE events_booking.status = :status GROUP BY events_booking.event_id HAVING COUNT(events_booking.event_id) >= :event_count', ['status' => 1,'event_count'=>10]);
+                return response()->json(['status' => 'success', 'message' =>'list get successfully','data'=> $result], HTTP_OK);
                 // dd($result);
             }catch(Exception $e){
             return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  

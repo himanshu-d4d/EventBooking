@@ -17,4 +17,5 @@ define('HTTP_BED_REQUESTED','400');
 /////HTTP ERROR
 define('HTTP_SERVER_ERROR','500');
 define('HTTP_VALIDATION_ERROR','512');
+define('TO_MANY_REQUEST','429');
 ?>
