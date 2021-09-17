@@ -547,4 +547,46 @@ class EventController extends Controller
             return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
            } 
         }
+        public function SetReminder(Request $request){
+            $user = Auth::user();
+            $validator = Validator::make($request->all(),[
+                'reminder_date' => 'required',
+               
+         ]);
+         if ($validator->fails()) {
+           return response()->json($validator->errors(),HTTP_SERVER_ERROR,);
+         }
+          try{
+             $date = $request->reminder_date;
+             //dd($date);
+             $dateTime = strtotime($date);
+             //dd($dateTime);
+              $reminder_date =  date("Y-m-d h:i:sa", $dateTime);
+             $data = $request->id;
+             $evntId  = EventsBooking::where('id',$data)->first();
+             //dd($evntId);
+             $EventDetails  = Event::where('id',$evntId["event_id"])->first();
+             $event_User_id  = User::where('id',$EventDetails["user_id"])->first();
+             //dd($event_User_id);
+            $result = EventsBooking::where('id',$data)
+            ->update(['reminder_date' => $reminder_date]);
+            $user_data = ['guest_name'=>$user["name"], 'guest_image'=>$user["image"] ,'time'=>$reminder_date];
+            //dd($GuestDetails);
+            Notification::send($event_User_id, new Eventnotification($user['name'].' '.'set a reminder your event'.' '.$EventDetails['ename'],$user_data, "USER_SET_EVENT_REMINDER"));
+            return response()->json(['status' => 'success', 'message' =>'reminder add successfully'], HTTP_OK);
+          }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+           } 
+       }
+       public function ReminderNotification(){
+          try{
+                date_default_timezone_set("Asia/Kolkata");
+                $currentTime = date("Y-m-d h:i:sa");
+                //dd($currentTime);
+                $reminderDateTime = EventsBooking::where('reminder_date','==',$currentTime)->get();
+                dd($reminderDateTime);    
+          }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+           }  
+    }
 }

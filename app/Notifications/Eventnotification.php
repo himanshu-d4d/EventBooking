@@ -24,6 +24,7 @@ class Eventnotification extends Notification
         $this->name = $ename;
         $this->notification_type = $notification_type;
         $this->data = $user_data;
+       
         //$this->UserAttendStatus = $UserAttendStatus;
     }
 
@@ -64,6 +65,7 @@ class Eventnotification extends Notification
             'message'=> $this->name,
             'user_data'=> $this->data,
             'notification_type' => $this->notification_type,
+            
             //'user_attend_status'=>$this->UserAttendStatus
         ];
         
