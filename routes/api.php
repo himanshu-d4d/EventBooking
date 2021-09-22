@@ -60,6 +60,10 @@ use App\Http\Controllers\Event\EventBookingController;
     Route::get('get-expired-events', [EventController::class, 'getExpiredEvents']);
     Route::get('get-limit-events', [EventController::class, 'GetLimitEvents']);
     Route::post('event-reminder-set', [EventController::class, 'SetReminder']);
+    Route::post('user-event-like', [EventController::class, 'EventLike']);
+    Route::post('user-event-comment', [EventController::class, 'EventComment']);
+
+
 
 
 

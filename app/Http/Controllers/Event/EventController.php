@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\EventsBooking;
 use App\Models\UserNotification;
 use App\Models\User;
+use App\Models\Userlike;
+use App\Models\UserComment;
 use App\Notifications\Eventnotification;
 use Validator;
 use Exception;
@@ -586,30 +588,57 @@ class EventController extends Controller
             return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
            } 
        }
-    //    public function ReminderNotification(){
-    //       try{
-    //         date_default_timezone_set("Asia/Kolkata");
-    //         $currentTime = date("17:50");
-    //         $currentDate = date("Y-m-d");
-    //         // dd($currentTime);
-    //         $results = DB::table('events_booking')->join('users', 'users.id', '=', 'events_booking.guest_id')
-    //         ->join('events', 'events.id', '=', 'events_booking.event_id')
-    //         ->whereDate('events_booking.reminder_date', $currentDate)->whereTime('events_booking.reminder_date', $currentTime)->select('users.*', 'events.ename')->get();
-    //       $data = $results->toArray();
-    //       //dd( $data );
-    //       if(count($data)){
-    //         foreach($data as $result){     
-    //             //dd($result); 
-    //             $userData = User::where('id',$result->id)->first();
-    //         $user_data = ['user_name'=>$userData['name'], 'user_image'=>$userData['image']];
-    //         //dd($user_data);
-        
-    //         Notification::send( $userData, new Eventnotification('your reminder start',$user_data, "USER_SET_EVENT_REMINDER"));
-    //            }
-    //       }  
-            
-    //       }catch(Exception $e){
-    //         return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
-    //        }  
-    // }
+      public function EventLike(Request $request){
+          try{
+            $user = Auth::user();
+            $EventId = $request->event_id;
+            $LikeActivity = $request->like;
+            $userId = $user['id'];
+            //dd($data);
+            if(!(Userlike::where('guest_id',$userId)->where('event_id',$EventId)->exists())){
+                 $data['event_id'] = $EventId;
+                 $data['guest_id'] = $userId;
+                 $data['like_flag'] = $LikeActivity;
+                 //dd($data);
+                 $EventUser = Event::where('id',$EventId)->first();
+                 //dd($EventUser);
+                 $UserDetails = User::where('id',$EventUser['user_id'])->get();
+                 $result = UserLike::Create($data);
+                 $user_data = ['guest_name'=>$user["name"], 'guest_image'=>$user["image"]];
+                Notification::send($UserDetails, new Eventnotification($user['name'].' '.'liked on your event'.' '.$EventUser['ename'],$user_data, "USER_EVENT_LIKE"));
+                 return response()->json(['status' => 'success', 'message' =>'like succesfully','data'=> $result], HTTP_OK);
+            }else{
+                $likeId = Userlike::where('guest_id',$userId)->orWhere('event_id',$EventId)->select('id')->first();
+                //dd($likeId);
+                  $updateResult = Userlike::where('id',$likeId['id'])
+                 ->update(['like_flag' => $LikeActivity]);
+                 return response()->json(['status' => 'success', 'message' =>'like Update successfully'], HTTP_OK);
+            }
+            //dd($eventId);
+          }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+           } 
+      } 
+      public function EventComment(Request $request){
+          try{
+            $user = Auth::user();
+            $EventId = $request->event_id;
+            $userId = $user['id'];
+            $comment = $request->comment;
+            $data['event_id'] = $EventId;
+            $data['guest_id'] = $userId;
+            $data['comment'] = $comment;
+            $EventUser = Event::where('id',$EventId)->first();
+               //dd($EventUser);
+            $UserDetails = User::where('id',$EventUser['user_id'])->get();
+               //dd($UserDetails);
+            $result = UserComment::Create($data);
+            $user_data = ['guest_name'=>$user["name"], 'guest_image'=>$user["image"]];
+            Notification::send($UserDetails, new Eventnotification($user['name'].' '.'commented on your event'.' '.$EventUser['ename'],$user_data, "USER_EVENT_COMMENT"));
+            return response()->json(['status' => 'success', 'message' =>'comment add successfully', 'data'=>$result], HTTP_OK);
+            //dd( $result);
+          }catch(Exception $e){
+            return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+           } 
+      }  
 }

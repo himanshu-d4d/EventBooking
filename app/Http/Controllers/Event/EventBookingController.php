@@ -65,4 +65,31 @@ class EventBookingController extends Controller
       }   
           
   }
+  public function ReminderNotification(){
+    //       try{
+    //         date_default_timezone_set("Asia/Kolkata");
+    //         $currentTime = date("17:50");
+    //         $currentDate = date("Y-m-d");
+    //         // dd($currentTime);
+    //         $results = DB::table('events_booking')->join('users', 'users.id', '=', 'events_booking.guest_id')
+    //         ->join('events', 'events.id', '=', 'events_booking.event_id')
+    //         ->whereDate('events_booking.reminder_date', $currentDate)->whereTime('events_booking.reminder_date', $currentTime)->select('users.*', 'events.ename')->get();
+    //       $data = $results->toArray();
+    //       //dd( $data );
+    //       if(count($data)){
+    //         foreach($data as $result){     
+    //             //dd($result); 
+    //             $userData = User::where('id',$result->id)->first();
+    //         $user_data = ['user_name'=>$userData['name'], 'user_image'=>$userData['image']];
+    //         //dd($user_data);
+        
+    //         Notification::send( $userData, new Eventnotification('your reminder start',$user_data, "USER_SET_EVENT_REMINDER"));
+    //            }
+    //       }  
+            
+    //       }catch(Exception $e){
+    //         return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+    //        }  
+    // }
+  }
 }
