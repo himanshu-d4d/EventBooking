@@ -64,7 +64,4 @@ use App\Http\Controllers\Event\EventBookingController;
     Route::post('user-event-comment', [EventController::class, 'EventComment']);
 
 
-
-
-
 }); 

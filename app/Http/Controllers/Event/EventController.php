@@ -264,12 +264,18 @@ class EventController extends Controller
             ->select('users.*','events_booking.guest_id')
             ->get();
             $eventDetail = Event::where('id', $data['event_id'])->first();
-            if($eventDetail){
-                return response()->json(["data" => [
-                    'eventdetail'=>$eventDetail,
-                    'guestList'=>$guestList
-                ],
-                'status' => 'success', 'message' =>'Guest fetch Successfully'],  HTTP_OK,);
+            $count = DB::table('User_likes')
+            ->groupBy('event_id')
+            ->where('like_flag',1)
+            ->where('event_id',$data['event_id'])
+            //->selectRaw('count(like_flag) as total_likes')
+            ->count();
+            $EventDetails = $eventDetail->toArray();
+            $EventLikeDetails =['total_likes'=>$count];
+            $AllGuest =[ 'guestList'=>$guestList];
+            $result[] = array_merge($EventDetails,$EventLikeDetails,$AllGuest);
+            if($result){
+                return response()->json(['status' => 'success', 'message' =>'Guest fetch Successfully', 'data'=>$result],  HTTP_OK,);
             }else{
                 return response()->json(['status' => 'error', 'message' =>'Event Does Not Match'],  HTTP_NOT_FOUND,);
             }
@@ -302,6 +308,12 @@ class EventController extends Controller
         $data = [];
         foreach($EventList as $value){
             // dd($value);
+            $count = DB::table('User_likes')
+            ->groupBy('event_id')
+            ->where('like_flag',1)
+            ->where('event_id',$value['id'])
+            //->selectRaw('count(like_flag) as total_likes')
+            ->count();
             if(date("Y-m-d", strtotime($value['date']))< $today){
                 $EventExpired = true;
             }else{
@@ -310,8 +322,9 @@ class EventController extends Controller
             //dd($EventExpired);
             $EventExpireDetails = ["event_expired" => $EventExpired];
            // dd($EventExpireDetails);
+           $EventLikeDetails =['total_likes'=>$count];
             $EventAttendDetails = ["event_attend_details"=>$this->getGuestCount($value['id'])];
-            $data[] = array_merge($value->toArray(), $EventExpireDetails, $EventAttendDetails);
+            $data[] = array_merge($value->toArray(), $EventExpireDetails,$EventLikeDetails, $EventAttendDetails);
         //    $data[$value['id']]["event_attend_details"] = $this->getGuestCount($value['id']); 
            
         }
@@ -331,19 +344,30 @@ class EventController extends Controller
       public function OtherUserEvents(Request $request){
       try{
         $user = Auth::user();
+        $today = date("Y-m-d");
         $input = $request->all();
         $input['user_id'] = $user['id'];
         $EventList = Event::where('user_id','!=', $input['user_id'])->get();
+        //dd($EventList);
+        
         $data = [];
         foreach($EventList as $value){
+            $count = DB::table('User_likes')
+            ->groupBy('event_id')
+            ->where('like_flag',1)
+            ->where('event_id',$value['id'])
+            //->selectRaw('count(like_flag) as total_likes')
+            ->count();
+            //dd( $count);
             if(date("Y-m-d", strtotime($value['date']))< $today){
                 $EventExpired = true;
             }else{
                 $EventExpired = false;
             }
+            $EventLikeDetails =['total_likes'=>$count];
             $EventExpireDetails = ["event_expired" => $EventExpired];
             $EventAttendDetails = ["event_attend_details"=>$this->getGuestCount($value['id'])];
-            $data[] = array_merge($value->toArray(), $EventExpireDetails, $EventAttendDetails);
+            $data[] = array_merge($value->toArray(),$EventExpireDetails,$EventLikeDetails, $EventAttendDetails);
         }
         if($EventList){                
         return response()->json(['status' => 'success', 'message' =>'List Fetch Successfully','otheruser-events'=>$data],  HTTP_OK,);
@@ -364,14 +388,20 @@ class EventController extends Controller
             $EventDetails = Event::where('id', $input['event_id'])->first();
          //dd($EventDetails);
          if($EventDetails){
-
+            $count = DB::table('User_likes')
+            ->groupBy('event_id')
+            ->where('like_flag',1)
+            ->where('event_id',$EventDetails['id'])
+            //->selectRaw('count(like_flag) as total_likes')
+            ->count();
+            //dd($count);
             $guestList = DB::table('events_booking')
                 ->join('users', 'users.id', '=', 'events_booking.guest_id')
                 ->where('events_booking.event_id',$EventDetails['id'])
                 ->where('status',1)
                 ->select('users.id','users.name','users.image','events_booking.status')
                 ->get();
-                //dd( $guestList);
+               // dd( $guestList);
             $guestStatus = EventsBooking::groupBy('status')
             ->where('event_id',$EventDetails['id'])
             ->selectRaw('count(*) as total, status')
@@ -393,10 +423,11 @@ class EventController extends Controller
                 }
             }
            // dd($userAttemptStatus);
+           $EventLikeDetails =['total_likes'=>$count];
             $event = $EventDetails->toArray();
             $allguest = ["guestlist"=>$guestList->toArray()];
             $gueststatus = ['event_attend_details'=>$userAttemptStatus];
-               $result = array_merge($event,$gueststatus,$allguest);
+               $result = array_merge($event,$EventLikeDetails,$gueststatus,$allguest);
                //dd($result);
                
                 return response()->json(['status' => 'success', 'message' =>'Event Fetch Successfully','event'=>$result], HTTP_OK,);
@@ -523,8 +554,20 @@ class EventController extends Controller
                try{
                 $today = date("Y-m-d");
                    $AllEvents = Event::where('date','<',$today )->get();
-                   //dd($AllEvents->toArray());
-            return response()->json(['status' => 'success', 'message' =>'list get successfully','expired-events'=> $AllEvents], HTTP_OK,);
+                  // dd($AllEvents);
+                   $data = [];
+                   foreach($AllEvents as $value){
+                    $count = DB::table('User_likes')
+                    ->groupBy('event_id')
+                    ->where('like_flag',1)
+                    ->where('event_id',$value['id'])
+                    ->count();
+                    //dd($count);
+                    $totalLikes = ['total_likes'=> $count];
+                    //$totalEvents = $EventsDetails->toArray();
+                    $data[] = array_merge($value->toArray(),$totalLikes);
+                   }
+            return response()->json(['status' => 'success', 'message' =>'list get successfully','expired-events'=> $data ], HTTP_OK,);
                }catch(Exception $e){
             return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
            } 
@@ -640,5 +683,24 @@ class EventController extends Controller
           }catch(Exception $e){
             return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
            } 
-      }  
+      } 
+    //   public function EventLikeCount(){
+    //      try{
+    //         $count = DB::table('User_likes')
+    //         ->select('events.*')
+    //         ->join("events", "user_likes.event_id", '=', "events.id")
+    //         ->groupBy('event_id')
+    //         ->where('like_flag',1)
+    //         ->selectRaw('count(like_flag) as total_likes, like_flag')
+    //         ->get();
+    //        //dd($count);
+    //        return response()->json(['status' => 'success', 'message' =>'list get successfully', 'data'=>$count], HTTP_OK);
+
+    //        //dd($result);
+    //      }catch(Exception $e){
+    //         return response()->json(['status' => 'error', 'message' =>$e->getMessage()],  HTTP_BED_REQUESTED,);  
+    //        }  
+            
+         
+    //   } 
 }
