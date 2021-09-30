@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth:admin'], function (){
         Route::post('/editprofile', [AdminController::class, 'EditProfile']);
         Route::get('/image', [AdminController::class, 'AdminImage'])->name('edit_image');
         Route::post('/edit-image', [AdminController::class, 'editAdminImage']);
+        Route::get('/reset-password', [AdminController::class, 'ResetPassword']);
+        Route::post('/reset-admin-password', [AdminController::class, 'ResetAdminPassword']);
 
 
 

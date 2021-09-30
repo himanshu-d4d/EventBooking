@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use File;
+use Validator;
 use App\Models\admin\Admin;
 
 class AdminController extends Controller
@@ -71,13 +72,32 @@ class AdminController extends Controller
        }catch(Exception $e){
         return response()->json(['status' => 'error', 'message' =>$e->getMessage()],HTTP_BED_REQUESTED,);
    }   
-        
-        
-        // $imageName = time().'.'.$request->eimage->extension();
-        // dd($imageName);
-        // $image->move('images', $imageName);
-        //return view('admin.profile.edit_image');
      }
+   public function ResetPassword(Request $request){
+    return view('admin.profile.password_reset');
+   }  
+   public function ResetAdminPassword(Request $request){
+       $admin = Auth::user();
+       //dd( $admin );
+    $validator = Validator::make($request->all(),[
+       
+        'old_password' => 'required',
+         'password' => 'required',
+        'c_password' => 'required|same:password', 
+    ]);
+    if ($validator->fails()) {
+        return redirect()->back(); 
+    }
+   try{
+        if (\Hash::check($request->old_password , $admin['password'] )) {
+         $result = Admin::where('id',$admin['id'])
+                ->update(['password'=>dd]);
+      }
+   } catch(Exception $e){
+    return response()->json(['status' => 'error', 'message' =>$e->getMessage()],HTTP_BED_REQUESTED,);
+}   
+   
+   }  
    public function logout(){
         Auth::logout();
         return redirect('/admin');

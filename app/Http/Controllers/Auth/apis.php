@@ -215,6 +215,7 @@ class apis extends Controller
       return response()->json($validator->errors(),202);
       }
       try{
+        
           $request->all();
           $password = $user['password'];
           //dd($oldpassword);

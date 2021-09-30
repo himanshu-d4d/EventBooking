@@ -48,6 +48,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{url('admin/reset-password')}}" class="nav-link">
+              <i class="fa fa-lock "></i>
+              <p>
+                Password Reset
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{url('admin/logout')}}" class="nav-link">
               <i class="fa fa-power-off"></i>
               <p>
