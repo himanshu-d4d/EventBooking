@@ -89,7 +89,7 @@ class AdminController extends Controller
         return redirect()->back(); 
     }
    try{
-        if (\Hash::check($request->old_password , $admin['password'] )) {
+        if (\Hash::check($request->old_password , $admin['password'] )) { 
          $result = Admin::where('id',$admin['id'])
                 ->update(['password'=>dd]);
       }
