@@ -231,5 +231,8 @@ class apis extends Controller
       }catch(Exception $e){
         return response()->json(['status' => 'error', 'message' =>$e->getMessage()],HTTP_BED_REQUESTED,);
      }  
-    }    
+    } 
+    public function registration(){
+      return view('admin.layouts.registration');
+    }   
 }  
