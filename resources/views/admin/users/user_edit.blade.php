@@ -33,32 +33,34 @@
                 </button>
               </div>
             </div>
-            <form action = "{{url('admin/editprofile')}}" method="POST">
+            <form action = "{{url('admin/users-update')}}" method="POST">
             @csrf
             <div class="card-body">
               <div class="form-group">
-              <input type="hidden" name ="id" class="form-control" value="{{AuthData()->id}}"  >
+              <input type="hidden" name ="id" class="form-control" value="{{$users->id}}"  >
                 <label for="inputName">Username</label>
-                <input type="text" name ="username" class="form-control" value="{{AuthData()->username}}"  disabled>
+                <input type="text" name ="username" class="form-control" value="{{$users->username}}"  disabled>
               </div>
               <div class="form-group">
                 <label for="inputName">Name</label>
-                <input type="text" name="name" class="form-control" value="{{AuthData()->name}}">
+                <input type="text" name="name" class="form-control" value="{{$users->name}}">
                 @if ($errors->has('name')) <p class="alert-danger">{{ $errors->first('name') }}</p> @endif
+                
               </div>
               <div class="form-group">
                 <label for="inputName">Email</label>
-                <input type="text" name="email" class="form-control" value="{{AuthData()->email}}">
+                <input type="text" name="email" class="form-control" value="{{$users->email}}">
                 @if ($errors->has('email')) <p class="alert-danger">{{ $errors->first('email') }}</p> @endif
               </div>
               <div class="form-group">
-                <label for="inputName">Image</label><br>
-                <a href = "{{url('admin/image')}}"><img src="{{url('/images/'.AuthData()->image)}}" name= "image" class="img-circle elevation-2" alt="User Image" style= "height:50px"></a>
+                <label for="inputName">Image</label><br/>
+                <img src="{{url('/images/'.AuthData()->image)}}" class="img-circle elevation-2" alt="User Image" style= "height:50px">
               </div>
               <div class="row">
                 <div class="col-7">
                 <a href="#" class="btn btn-secondary" style ="margin-left:75%">Cancel</a>
-                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                <input type="submit" value="Save Changes" class="btn btn-success float-right">                
+
                 </div>
             </div>
             </div>

@@ -48,8 +48,31 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fa fa-users"></i>
+              <p>
+                Users
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{url('admin/users')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Users List</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{url('admin/users-create')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>New User</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
             <a href="{{url('admin/reset-password')}}" class="nav-link">
-              <i class="fa fa-lock "></i>
+              <i class="nav-icon fa fa-lock "></i>
               <p>
                 Password Reset
               </p>
@@ -57,7 +80,7 @@
           </li>
           <li class="nav-item">
             <a href="{{url('admin/logout')}}" class="nav-link">
-              <i class="fa fa-power-off"></i>
+              <i class="nav-icon fa fa-power-off"></i>
               <p>
                 Logout
               </p>

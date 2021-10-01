@@ -17,14 +17,12 @@
         </div>
       </div><!-- /.container-fluid -->
     </section>
-
     <!-- Main content -->
-    
     <section class="content">
       <div class="row">
         <div class="col-md-10" style = "margin-left:140px">
           <div class="card card-primary">
-            <div class="card-header">
+            <div class="card-header">  
               <h3 class="card-title">General</h3>
 
               <div class="card-tools">
@@ -33,6 +31,11 @@
                 </button>
               </div>
             </div>
+            @if(session()->has('success'))
+            <p class="alert-success">
+            {{ session()->get('success') }}
+          </p>
+           @endif
             <form action = "{{url('admin/reset-admin-password')}}" method="POST">
             @csrf
             <div class="card-body">
@@ -40,17 +43,23 @@
               <input type="hidden" name ="id" class="form-control" value="{{AuthData()->id}}">
                 <label for="inputName">Old Password</label>
                 <input type="text" name ="old_password" class="form-control">
-                @if($errors->any())
-                    {{ implode('', $errors->all('<div>:message</div>')) }}
-                @endif
+                @if ($errors->has('old_password')) <p class="alert-danger">{{ $errors->first('old_password') }}</p> @endif
+                @if(session()->has('error'))
+                  <p class="alert-danger">
+                      {{ session()->get('error') }}
+                    </p>
+                  @endif
               </div>
               <div class="form-group">
                 <label for="inputName">New Password</label>
                 <input type="text" name="password" class="form-control">
+                @if ($errors->has('password')) <p class="alert-danger">{{ $errors->first('password') }}</p> @endif
               </div>
               <div class="form-group">
                 <label for="inputName">confirm Password</label>
                 <input type="text" name="c_password" class="form-control" >
+                @if ($errors->has('c_password')) <p class="alert-danger">{{ $errors->first('c_password') }}</p> @endif
+
               </div>
               <div class="row">
                 <div class="col-7">

@@ -18,6 +18,11 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <!-- /.login-logo -->
+  @if(session()->has('error'))
+                  <p class="alert-danger">
+                      {{ session()->get('error') }}
+                    </p>
+                  @endif
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
       <a href="#" class="h1"><b>Event</a>
@@ -34,6 +39,7 @@
             </div>
           </div>
         </div>
+        @if ($errors->has('email')) <p class="alert-danger">{{ $errors->first('email') }}</p> @endif
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="Password" name="password">
           <div class="input-group-append">
@@ -42,6 +48,7 @@
             </div>
           </div>
         </div>
+        @if ($errors->has('password')) <p class="alert-danger">{{ $errors->first('password') }}</p> @endif
         <div class="row">
           <div class="col-8">
             <div class="icheck-primary">

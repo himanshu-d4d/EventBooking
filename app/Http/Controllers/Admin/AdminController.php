@@ -15,6 +15,10 @@ class AdminController extends Controller
         return view('admin.layouts.login');  
     }
     public function adminlogin(Request $request){
+      $validated = $request->validate([
+        'email' => 'required|',
+        'password' => 'required',
+    ]);
         try{
             $user = $request->all();
             // dd($user);
@@ -26,11 +30,10 @@ class AdminController extends Controller
             if(Auth::guard('admin')->attempt($userdata)){
                    return redirect('admin/dashboard');
             }else{
-                return redirect('/admin');
+                return redirect('/admin')->with('error','Email OR Password Does Not Match');
             }
            }catch(Exception $e){
-               return response()->json(['status' => 'error', 'message' =>$e->getMessage()],HTTP_BED_REQUESTED,);
-          }
+            echo 'Message: ' .$e->getMessage();          }
     }
     public function dashboard(){
         if (!Auth::check()) {
@@ -48,12 +51,20 @@ class AdminController extends Controller
         return view('admin.profile.Edit_profile');
      }
      public function EditProfile(Request $request){
-       $data = $request->all();
+      $validated = $request->validate([
+        'name' => 'required',
+        'email' => 'required',
+    ]);
+      try{
+        $data = $request->all();
         $result = Admin::where('id',$data['id'])
         ->update(['name'=>$data['name'],
         'email'=>$data['email']
      ]);
      return redirect('admin/profile');
+      }catch(Exception $e){
+        echo 'Message: ' .$e->getMessage();   } 
+      
     }
     public function AdminImage(){
         return view('admin.profile.edit_image');
@@ -70,34 +81,34 @@ class AdminController extends Controller
             ->update(['image'=>$imageName]);
          return redirect('admin/profile');
        }catch(Exception $e){
-        return response()->json(['status' => 'error', 'message' =>$e->getMessage()],HTTP_BED_REQUESTED,);
-   }   
+        echo 'Message: ' .$e->getMessage();   }   
      }
    public function ResetPassword(Request $request){
     return view('admin.profile.password_reset');
    }  
    public function ResetAdminPassword(Request $request){
        $admin = Auth::user();
-       //dd( $admin );
-    $validator = Validator::make($request->all(),[
-       
+    $validated = $request->validate([
         'old_password' => 'required',
-         'password' => 'required',
-        'c_password' => 'required|same:password', 
+        'password' => 'required',
+       'c_password' => 'required|same:password', 
     ]);
-    if ($validator->fails()) {
-        return redirect()->back(); 
-    }
+      
    try{
-        if (\Hash::check($request->old_password , $admin['password'] )) { 
-         $result = Admin::where('id',$admin['id'])
-                ->update(['password'=>dd]);
+       $data = $request->all();
+      // dd($data);
+        if (\Hash::check($request->old_password , $admin['password'] )) {
+            $newpassword = bcrypt($data['password']); 
+            //dd($newpassword);
+         $result = Admin::where('id',$data['id'])
+                ->update(['password'=>$newpassword]);
+                return redirect('admin/reset-password')->with("success", "Password Reset Successfully !!");
+      }else{
+        return redirect('admin/reset-password')->with("error", "Old Password does not match");
       }
    } catch(Exception $e){
-    return response()->json(['status' => 'error', 'message' =>$e->getMessage()],HTTP_BED_REQUESTED,);
-}   
-   
-   }  
+    echo 'Message: ' .$e->getMessage();   }
+} 
    public function logout(){
         Auth::logout();
         return redirect('/admin');

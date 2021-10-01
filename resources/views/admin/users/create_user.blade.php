@@ -1,5 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -19,7 +20,7 @@
     </section>
 
     <!-- Main content -->
-    
+
     <section class="content">
       <div class="row">
         <div class="col-md-10" style = "margin-left:140px">
@@ -33,32 +34,48 @@
                 </button>
               </div>
             </div>
-            <form action = "{{url('admin/editprofile')}}" method="POST">
+            <form action = "{{url('admin/users-store')}}" method="POST" enctype='multipart/form-data'>
             @csrf
             <div class="card-body">
               <div class="form-group">
-              <input type="hidden" name ="id" class="form-control" value="{{AuthData()->id}}"  >
                 <label for="inputName">Username</label>
-                <input type="text" name ="username" class="form-control" value="{{AuthData()->username}}"  disabled>
+                <input type="text" name ="username" class="form-control" value="{{ old('name') }}">
+                @if ($errors->has('username')) <p class="alert-danger">{{ $errors->first('username') }}</p> @endif
               </div>
               <div class="form-group">
                 <label for="inputName">Name</label>
-                <input type="text" name="name" class="form-control" value="{{AuthData()->name}}">
-                @if ($errors->has('name')) <p class="alert-danger">{{ $errors->first('name') }}</p> @endif
+                <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+                @if ($errors->has('name')) <p class="alert-danger">{{ $errors->first('name') }}</p> @endif  
               </div>
               <div class="form-group">
                 <label for="inputName">Email</label>
-                <input type="text" name="email" class="form-control" value="{{AuthData()->email}}">
+                <input type="text" name="email" class="form-control" value="{{ old('email') }}">
                 @if ($errors->has('email')) <p class="alert-danger">{{ $errors->first('email') }}</p> @endif
+                @if(session()->has('error'))
+                  <p class="alert-danger">
+                      {{ session()->get('error') }}
+                    </p>
+                  @endif
               </div>
               <div class="form-group">
-                <label for="inputName">Image</label><br>
-                <a href = "{{url('admin/image')}}"><img src="{{url('/images/'.AuthData()->image)}}" name= "image" class="img-circle elevation-2" alt="User Image" style= "height:50px"></a>
+                <label for="inputName">Password</label>
+                <input type="text" name="password" class="form-control" value="">
+                @if ($errors->has('password')) <p class="alert-danger">{{ $errors->first('password') }}</p> @endif
+              </div>
+              <div class="form-group">
+                <label for="inputName">Confirm Password</label>
+                <input type="text" name="c_password" class="form-control" value="">
+                @if ($errors->has('c_password')) <p class="alert-danger">{{ $errors->first('c_password') }}</p> @endif
+              </div>
+              <div class="form-group">
+                <label for="inputName">Image</label><br/>
+                <input type="file" class="form-control" name ="image" />
               </div>
               <div class="row">
                 <div class="col-7">
                 <a href="#" class="btn btn-secondary" style ="margin-left:75%">Cancel</a>
-                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+                <input type="submit" value="Save Changes" class="btn btn-success float-right">                
+
                 </div>
             </div>
             </div>

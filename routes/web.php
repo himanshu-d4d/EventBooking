@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,15 @@ Route::group(['middleware' => 'auth:admin'], function (){
         Route::post('/edit-image', [AdminController::class, 'editAdminImage']);
         Route::get('/reset-password', [AdminController::class, 'ResetPassword']);
         Route::post('/reset-admin-password', [AdminController::class, 'ResetAdminPassword']);
+
+////////////////////////////// Users Routes //////////////////////////////////////////////////
+
+        Route::get('/users', [UserController::class, 'UserList']);
+        Route::get('/users-edit/{id}', [UserController::class, 'UserEdit']);
+        Route::post('/users-update', [UserController::class, 'UserUpdate']);
+        Route::get('/users-create', [UserController::class, 'UserCreate']);
+        Route::post('/users-store', [UserController::class, 'UserStore']);
+        Route::get('/users-delete/{id}', [UserController::class, 'UserDelete']);
 
 
 
