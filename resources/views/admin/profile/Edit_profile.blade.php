@@ -53,7 +53,11 @@
               </div>
               <div class="form-group">
                 <label for="inputName">Image</label><br>
-                <a href = "{{url('admin/image')}}"><img src="{{url('/images/'.AuthData()->image)}}" name= "image" class="img-circle elevation-2" alt="User Image" style= "height:50px"></a>
+                @if (!AuthData()->image)
+                <a href = "{{url('admin/image')}}"><img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;"></a>
+                 @else
+                 <a href = "{{url('admin/image')}}"><img src="{{url('/images/'.AuthData()->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;"></a>
+                @endif
               </div>
               <div class="row">
                 <div class="col-7">

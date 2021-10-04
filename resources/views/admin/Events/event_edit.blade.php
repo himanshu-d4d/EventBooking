@@ -1,6 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -34,41 +33,42 @@
                 </button>
               </div>
             </div>
-            <form action = "{{url('admin/users-store')}}" method="POST" enctype='multipart/form-data'>
+            <form action = "{{url('admin/Events-update')}}" method="POST" enctype='multipart/form-data'>
             @csrf
             <div class="card-body">
-              <div class="form-group">
-                <label for="inputName">Username</label>
-                <input type="text" name ="username" class="form-control" value="{{ old('name') }}">
-                @if ($errors->has('username')) <p class="alert-danger">{{ $errors->first('username') }}</p> @endif
+            <div class="form-group">
+            <label for="inputName">Users</label>
+             <input type="text" name ="creator_name" class="form-control" value="{{$Events->creator_name}}" disabled>
               </div>
               <div class="form-group">
-                <label for="inputName">Name</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name') }}">
-                @if ($errors->has('name')) <p class="alert-danger">{{ $errors->first('name') }}</p> @endif  
+              <input type="hidden" name ="id" class="form-control" value="{{$Events->id}}"  >
+                <label for="inputName">Event Name</label>
+                <input type="text" name ="ename" class="form-control" value="{{$Events->ename}}">
               </div>
               <div class="form-group">
-                <label for="inputName">Email</label>
-                <input type="text" name="email" class="form-control" value="{{ old('email') }}">
-                @if ($errors->has('email')) <p class="alert-danger">{{ $errors->first('email') }}</p> @endif
-                @if(session()->has('error'))
-                  <p class="alert-danger">
-                      {{ session()->get('error') }}
-                    </p>
-                  @endif
+                <label for="inputName">Event Address</label>
+                <input type="text" name="eaddress" class="form-control" value="{{$Events->eaddress}}">
               </div>
               <div class="form-group">
-                <label for="inputName">Password</label>
-                <input type="text" name="password" class="form-control" value="">
-                @if ($errors->has('password')) <p class="alert-danger">{{ $errors->first('password') }}</p> @endif
+                <label for="inputName">Event Price</label>
+                <input type="text" name="eprice" class="form-control" value="{{$Events->eprice}}">
               </div>
               <div class="form-group">
-                <label for="inputName">Confirm Password</label>
-                <input type="text" name="c_password" class="form-control" value="">
-                @if ($errors->has('c_password')) <p class="alert-danger">{{ $errors->first('c_password') }}</p> @endif
+                <label for="inputName">Date</label>
+                <input type="text" name="date" class="form-control" value="{{$Events->date}}">
+              </div>
+              <div class="form-group">
+                <label for="inputName">Description</label>
+                <input type="text" name="description" class="form-control" value="{{$Events->description}}">
               </div>
               <div class="form-group">
                 <label for="inputName">Image</label><br/>
+                @if (!$Events->eimage)
+                 <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+                 @else
+                <img src="{{url('/images/'.$Events->eimage)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+                @endif
+                <input type="hidden" class="form-control" name ="old_image" value ="{{$Events->eimage}}"/>
                 <input type="file" class="form-control" name ="image" />
               </div>
               <div class="row">

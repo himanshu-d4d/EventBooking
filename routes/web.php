@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\EventController;
 
 
 /*
@@ -46,7 +47,15 @@ Route::group(['middleware' => 'auth:admin'], function (){
         Route::post('/users-store', [UserController::class, 'UserStore']);
         Route::get('/users-delete/{id}', [UserController::class, 'UserDelete']);
 
+//////////////////////////////// Events Routes /////////////////////////////////////////////
 
+        Route::get('/Events-List', [EventController::class, 'EventList']);
+        Route::get('/Events-create', [EventController::class, 'EventCreate']);
+        Route::post('/Events-store', [EventController::class, 'EventStore']);
+        Route::get('/Events-Edit/{id}', [EventController::class, 'EditEvent']);
+        Route::post('/Events-update', [EventController::class, 'UpdateEvent']);
+        Route::get('/singal-event-details/{id}', [EventController::class, 'SingalEventDetails']);
+        Route::get('/Events-delete/{id}', [EventController::class, 'EventDelete']);
 
 
     });

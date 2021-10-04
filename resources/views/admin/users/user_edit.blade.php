@@ -11,7 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Profile Edit</li>
+              <li class="breadcrumb-item active">User Profile Edit</li>
             </ol>
           </div>
         </div>
@@ -54,7 +54,11 @@
               </div>
               <div class="form-group">
                 <label for="inputName">Image</label><br/>
-                <img src="{{url('/images/'.AuthData()->image)}}" class="img-circle elevation-2" alt="User Image" style= "height:50px">
+                @if (!$users->image)
+                 <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+                 @else
+                <img src="{{url('/images/'.$users->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+                @endif
               </div>
               <div class="row">
                 <div class="col-7">

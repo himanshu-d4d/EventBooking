@@ -56,7 +56,11 @@
                 {{$user->email}}
                 </td>
                 <td>
-                <img src="{{url('/images/'.$user->image)}}" class="img-circle elevation-2" alt="User Image" style= "height:50px">
+                @if (!$user->image)
+                 <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+                 @else
+                <img src="{{url('/images/'.$user->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+                @endif
                 </td>
                 <td>
                 <a class="btn btn-info btn-sm" href="{{url('admin/users-edit/'.$user->id)}}">Edit</a>

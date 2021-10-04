@@ -40,7 +40,11 @@
               <input type="hidden" class="form-control" name ="id" value = "{{AuthData()->id}}" />
                 <label for="inputName">Image</label><br>
                 <input type="hidden" class="form-control" value="{{AuthData()->image}}" name ="old_image"/>
-                <img src="{{url('/images/'.AuthData()->image)}}" class="img-circle elevation-2" alt="User Image" style= "height:50px">
+                @if (!AuthData()->image)
+               <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+                 @else
+                <img src="{{url('/images/'.AuthData()->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+                @endif
                 <br><br>
                  <input type="file" class="form-control" name ="image" />
               </div>

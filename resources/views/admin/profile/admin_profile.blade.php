@@ -56,7 +56,11 @@
                 {{AuthData()->email}}
                 </td>
                 <td>
-                <img src="{{url('/images/'.AuthData()->image)}}" class="img-circle elevation-2" alt="User Image" style= "height:50px">
+                @if (!AuthData()->image)
+               <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+                 @else
+                <img src="{{url('/images/'.AuthData()->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+                @endif
                 </td>
                 <td>
                 <a class="btn btn-info btn-sm" href="{{url('admin/profile/'.AuthData()->id)}}">Edit</a>

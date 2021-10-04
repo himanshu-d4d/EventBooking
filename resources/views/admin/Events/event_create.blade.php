@@ -1,6 +1,5 @@
 @extends('admin.layouts.master')
 @section('content')
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -34,38 +33,44 @@
                 </button>
               </div>
             </div>
-            <form action = "{{url('admin/users-store')}}" method="POST" enctype='multipart/form-data'>
+            <form action = "{{url('admin/Events-store')}}" method="POST" enctype='multipart/form-data'>
             @csrf
             <div class="card-body">
-              <div class="form-group">
-                <label for="inputName">Username</label>
-                <input type="text" name ="username" class="form-control" value="{{ old('name') }}">
-                @if ($errors->has('username')) <p class="alert-danger">{{ $errors->first('username') }}</p> @endif
+            <input type="hidden" name ="creator_name" class="form-control" value="" id = "creator_name">
+            <div class="form-group">
+            <label for="inputName">Creator</label>
+            <select class="form-control" name="user_id" id = "select_id">
+            <option value="Select Part">Select Creator</option>  
+                @foreach(listAllUsers() as $users)                  
+                    <option value="{{$users->id}}" data-tokens="Part 1">{{$users->name}}</option>
+               @endforeach    
+            </select>
               </div>
               <div class="form-group">
-                <label for="inputName">Name</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name') }}">
-                @if ($errors->has('name')) <p class="alert-danger">{{ $errors->first('name') }}</p> @endif  
+                <label for="inputName">Event Name</label>
+                <input type="text" name ="ename" class="form-control" value="">
+                @if ($errors->has('ename')) <p class="alert-danger">{{ $errors->first('ename') }}</p> @endif
               </div>
               <div class="form-group">
-                <label for="inputName">Email</label>
-                <input type="text" name="email" class="form-control" value="{{ old('email') }}">
-                @if ($errors->has('email')) <p class="alert-danger">{{ $errors->first('email') }}</p> @endif
-                @if(session()->has('error'))
-                  <p class="alert-danger">
-                      {{ session()->get('error') }}
-                    </p>
-                  @endif
+                <label for="inputName">Event Address</label>
+                <input type="text" name="eaddress" class="form-control" value="">
+                @if ($errors->has('eaddress')) <p class="alert-danger">{{ $errors->first('eaddress') }}</p> @endif  
               </div>
               <div class="form-group">
-                <label for="inputName">Password</label>
-                <input type="text" name="password" class="form-control" value="">
-                @if ($errors->has('password')) <p class="alert-danger">{{ $errors->first('password') }}</p> @endif
+                <label for="inputName">Event Price</label>
+                <input type="text" name="eprice" class="form-control" value="">
+                @if ($errors->has('eprice')) <p class="alert-danger">{{ $errors->first('eprice') }}</p> @endif
               </div>
               <div class="form-group">
-                <label for="inputName">Confirm Password</label>
-                <input type="text" name="c_password" class="form-control" value="">
-                @if ($errors->has('c_password')) <p class="alert-danger">{{ $errors->first('c_password') }}</p> @endif
+                <label for="inputName">Date</label>
+                <input type="date" name="date" class="form-control" value="">
+                @if ($errors->has('date')) <p class="alert-danger">{{ $errors->first('date') }}</p> @endif
+              </div>
+              <div class="form-group">
+                <label for="inputName">Description</label><br />
+                <textarea id="w3review" name="description" rows="4" cols="50">
+                 </textarea>
+                @if ($errors->has('description')) <p class="alert-danger">{{ $errors->first('description') }}</p> @endif
               </div>
               <div class="form-group">
                 <label for="inputName">Image</label><br/>
@@ -91,4 +96,14 @@
 
     <!-- /.content -->
   </div>
+ <script>
+   $(document).ready(function(){
+    $("#select_id").change(function() {
+    var username = $(this).find("option:selected").text();
+    //var result=username.split('');
+    //alert(username);
+    $('#creator_name').val(username);
+});             
+   });
+ </script>
   @endsection
