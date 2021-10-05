@@ -66,15 +66,19 @@ class EventController extends Controller
            if($file){
             $imageName = time().'.'.$request->image->extension();
             $file->move('images', $imageName);
-            File::delete(public_path("images/$OldImage"));         
+            File::delete(public_path("images/$OldImage"));
+            $EventImage = $imageName;
+           }else{
+            $EventImage = $OldImage;
            }
+           //dd($EventImage);
             Event::where('id',$data['id'])
                ->update(['ename'=>$data['ename'],
                'eaddress'=>$data['eaddress'],
                'eprice'=>$data['eprice'],
                'date'=>$data['date'],
                'description'=>$data['description'],
-               'eimage'=>$imageName]);
+               'eimage'=>$EventImage]);
                return redirect('admin/Events-List');
        }catch(Exception $e){
         echo 'Message: ' .$e->getMessage();   
@@ -88,9 +92,9 @@ class EventController extends Controller
             ->count();
             $Gueststatus = EventsBooking::groupBy('status')
             ->where('event_id',$event['id'])
-            ->selectRaw('count(*) as total ,status')
+            ->selectRaw('count(*) as total ,status,guest_id')
             ->get();
-            $userAttemptStatus = ['attend'=>0, 'not_attend'=>0];
+            $userAttemptStatus = ['attend'=>0, 'not_attend'=>0, 'totalGuest'=>0];
         if($Gueststatus){
            $data = $Gueststatus->toArray();
            foreach($data as $value){
@@ -102,7 +106,7 @@ class EventController extends Controller
             }
            }
         }
-        //dd($userAttemptStatus['attend']);
+        //dd($userAttemptStatus);
       return view('admin.Events.singal_event_details')->with(compact('event','userAttemptStatus','TotalGuset')); 
    }
    public function EventDelete($id){
