@@ -59,7 +59,7 @@
               </div>
               <div class="form-group">
                 <label for="inputName">Description</label>
-                <textarea name="description" class="form-control" >
+                <textarea name="description" class="form-control"  rows="4" cols="50">
                 {{$Events->description}}
                   </textarea>
               </div>

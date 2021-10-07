@@ -56,6 +56,10 @@ Route::group(['middleware' => 'auth:admin'], function (){
         Route::post('/Events-update', [EventController::class, 'UpdateEvent']);
         Route::get('/singal-event-details/{id}', [EventController::class, 'SingalEventDetails']);
         Route::get('/Events-delete/{id}', [EventController::class, 'EventDelete']);
+        Route::get('/expired-events-list', [EventController::class, 'GetExpiredEvent']);
+        Route::get('/event-comment-list/{id}', [EventController::class, 'listUsercomments']);
+
+
 
 
     });

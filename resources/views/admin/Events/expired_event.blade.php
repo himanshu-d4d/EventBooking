@@ -6,12 +6,8 @@
 <!-- Default box -->
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">Event List</h3>
+    <h3 class="card-title">Expired Events</h3>
     <div class="card-tools">
-    <form method = "GET">
-      <input type="text" name = "search" style = "margin-right:10px" value="{{isset($_GET['search'])?$_GET['search']:'' }}">
-      <button type ="submit"><i class="fa fa-search"></i></button>
-    </form>
     </div>
   </div>
   <div class="card-body p-0">
@@ -39,29 +35,29 @@
             </tr>
         </thead>
         <tbody>
-        @if(!empty($Events) && $Events->count())
-        @foreach($Events as $Event)
+        @if(!empty($expiredEvent) && $expiredEvent->count())
+        @foreach($expiredEvent as $events)
             <tr>
             
                 <td>
-               {{$Event->id}}
+               {{$events->id}}
                 </td>
                 <td>
-                {{$Event->creator_name}}
+                {{$events->creator_name}}
                 </td>
                 <td>
-                {{$Event->ename}}
+                {{$events->ename}}
                 </td>
                 <td>
-                {{$Event->eaddress}}
+                {{$events->eaddress}}
                 </td>
                 <td>
-                {{$Event->date}}
+                {{$events->date}}
                 </td>
                 <td>
-                <a class="btn btn-success btn-sm" href="{{url('admin/singal-event-details/'.$Event->id)}}">View</a>
-                <a class="btn btn-info btn-sm" href="{{url('admin/Events-Edit/'.$Event->id)}}">Edit</a>
-                <a class="btn btn-danger btn-sm" href="{{url('admin/Events-delete/'.$Event->id)}}">Delete</a>
+                <a class="btn btn-success btn-sm" href="{{url('admin/singal-event-details/'.$events->id)}}">View</a>
+                <a class="btn btn-info btn-sm" href="{{url('admin/Events-Edit/'.$events->id)}}">Edit</a>
+                <a class="btn btn-danger btn-sm" href="{{url('admin/Events-delete/'.$events->id)}}">Delete</a>
                 </td>
                
             </tr>
@@ -78,7 +74,7 @@
 </div>
 <!-- /.card -->
 </section>
-{{$Events->links("pagination::bootstrap-4")}}
+{{$expiredEvent->links("pagination::bootstrap-4")}}
 </div>  
 
 @endsection

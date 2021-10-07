@@ -10,9 +10,17 @@ use File;
 
 class EventController extends Controller
 {
-  public function EventList(){
+  public function EventList(Request $request, Event $event ){
       try{
-          $Events = Event::paginate(10);
+        $records = $event;
+        if($request->query('search')){
+          $records = $records->where(function($q) use ($request) {
+               $q->orWhere('creator_name', 'like', '%'.$request->query('search').'%');
+               $q->orWhere('ename', 'like', '%'.$request->query('search').'%');
+               $q->orWhere('date', 'like', '%'.$request->query('search').'%');
+     });
+   }
+          $Events = $records->paginate(10);
           //dd($Events);
           return view('admin.events.Event_list')->with(compact('Events'));
       } catch(Exception $e){
@@ -122,6 +130,21 @@ class EventController extends Controller
         echo 'Message: ' .$e->getMessage();   
      } 
    }
+   public function GetExpiredEvent(){
+     $expiredEvent = Event::where('date','<',$today = date("Y-m-d"))->paginate(10);
+     return view('admin.Events.expired_event')->with(compact("expiredEvent"));
+   }
+   public function listUsercomments($id){
+    //echo $id; die;
+    dd($id);
+   $Usercomments = DB::table('user_comment')
+   ->select('user_comment.comment','users.name','users.username')
+   ->join('users', 'user_comment.guest_id','=','users.id')
+   ->where('event_id',$id)
+   ->paginate(5);
+   dd($Usercomments);
+   return redirect('admin.Events.singal_event_details')->with(compact('Usercomments'));
+}
 }  
     
 

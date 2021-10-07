@@ -2,9 +2,21 @@
 @section('content')
 <?php
  $alleventUser = listAllEventUser($event->id);
+
+ $listNotAteendUser = listNotAttendEventUser($event->id);
+
+ //dd($listNotAteendUser);
  $CountAllComments = CountEventComments($event->id);
+
+ //dd($CountAllComments);
  $CountAlllikes = CountEventlikes($event->id);
 
+ $listUserComments = listUsercomments($event->id);
+
+ $listTotalUsers = listTotalUsers($event->id);
+
+ $userLikeslist = listlikesEventUser($event->id);
+ //dd($userLikeslist );
 ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -79,7 +91,7 @@
                   <div class="info-box bg-light">
                     <div class="info-box-content">
                       <span class="info-box-text text-center text-muted">Not Attend Guest</span>
-                      <span class="info-box-number text-center text-muted mb-0">{{$userAttemptStatus['not_attend']}}</span>
+                      <span class="info-box-number text-center text-muted mb-0" data-toggle="modal" data-target="#notAttendUser">{{$userAttemptStatus['not_attend']}}</span>
                     </div>
                   </div>
                 </div>
@@ -87,7 +99,7 @@
                   <div class="info-box bg-light">
                     <div class="info-box-content">
                       <span class="info-box-text text-center text-muted">Total Guest</span>
-                      <span class="info-box-number text-center text-muted mb-0">{{$TotalGuset}}</span>
+                      <span class="info-box-number text-center text-muted mb-0" data-toggle="modal" data-target="#TotalUSerModal">{{$TotalGuset}}</span>
                     </div>
                   </div>
                 </div>
@@ -95,7 +107,7 @@
                   <div class="info-box bg-light">
                     <div class="info-box-content">
                       <span class="info-box-text text-center text-muted">Comments</span>
-                      <span class="info-box-number text-center text-muted mb-0">{{$CountAllComments}}</span>
+                      <span class="info-box-number text-center text-muted mb-0" data-toggle="modal" data-target="#EventCommentsModal">{{$CountAllComments}}</span>
                     </div>
                   </div>
                 </div>
@@ -103,7 +115,7 @@
                   <div class="info-box bg-light">
                     <div class="info-box-content">
                       <span class="info-box-text text-center text-muted">Likes</span>
-                      <span class="info-box-number text-center text-muted mb-0">{{$CountAlllikes}}</span>
+                      <span class="info-box-number text-center text-muted mb-0" data-toggle="modal" data-target="#eventLikeUsers">{{$CountAlllikes}}</span>
                     </div>
                   </div>
                 </div>
@@ -111,6 +123,7 @@
               <div class="row">
                 <div class="col-12">
                   <h4>Attend Guest List</h4>
+                  <!-- ///////////////////////////// -->
                   <table class="table table-striped projects">
                       <thead>
                           <tr>
@@ -177,5 +190,225 @@
       <!-- /.card -->
     </section>
     <!-- /.content -->
+<!-- /////////////////////////////////////////////////////////////////////////////////////// -->
+ <!-- Total Comments in Events Modal Box -->
+    <div class="container">
+  <!-- The Modal -->
+<div class="modal" id="EventCommentsModal">
+  <div class="modal-dialog">
+    <div class="modal-content" style = "width:700px">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Comments</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" style="height: 363px;overflow-y: scroll;">
+          <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Comment</th>
+        <th> Image</th>
+      </tr>
+    </thead>
+    <?php $i=1 ?>
+    @foreach($listUserComments as $comments)
+    <tbody>
+      <tr>
+        <td>{{$i++}}</td>
+        <td>{{$comments->name}}</td>
+        <td>{{$comments->username}}</td>
+        <td>{{$comments->comment}}</td>
+        <td> 
+          @if (!$comments->image)
+            <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+            @else
+            <img src="{{url('/images/'.$comments->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+         @endif
+        </td>
+      </tr>
+    </tbody>
+    @endforeach
+  </table>
+  </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- ////////////////////////// -->
+  <!-- Total Event Users Modal Box -->
+<div class="container">
+  <!-- The Modal -->
+<div class="modal" id="TotalUSerModal">
+  <div class="modal-dialog">
+    <div class="modal-content" style = "width:700px">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Total Guest</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" style="height: 363px;overflow-y: scroll;">
+          <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Image</th>
+      </tr>
+    </thead>
+    <?php $i=1 ?>
+    @foreach($listTotalUsers as $eventUsers)
+    <tbody>
+      <tr>
+        <td>{{$i++}}</td>
+        <td>{{$eventUsers->name}}</td>
+        <td>{{$eventUsers->username}}</td>
+        <td>{{$eventUsers->email}}</td>
+        <td> 
+          @if (!$eventUsers->image)
+            <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+            @else
+            <img src="{{url('/images/'.$eventUsers->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+         @endif
+        </td>
+      </tr>
+    </tbody>
+    @endforeach
+  </table>
+  </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- ////////////////////////////////////////////////////////// -->
+     <!-- Not Attend Users Modal -->
+     <div class="container">
+  <!-- The Modal -->
+<div class="modal" id="notAttendUser">
+  <div class="modal-dialog">
+    <div class="modal-content" style = "width:700px">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Not Attend Guest</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" style="height: 363px;overflow-y: scroll;">
+          <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Image</th>
+      </tr>
+    </thead>
+    <?php $i=1 ?>
+    @foreach($listNotAteendUser as $notAttendUser)
+    <tbody>
+      <tr>
+        <td>{{$i++}}</td>
+        <td>{{$notAttendUser->name}}</td>
+        <td>{{$notAttendUser->username}}</td>
+        <td>{{$notAttendUser->email}}</td>
+        <td>
+         @if (!$notAttendUser->image)
+            <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+            @else
+            <img src="{{url('/images/'.$notAttendUser->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+          @endif
+        </td>
+      </tr>
+    </tbody>
+    @endforeach
+  </table>
+  </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+<!-- /////////////////////////////////////////////////////////////// -->
+       <!-- Event Likes Users Modal Box -->
+       <div class="container">
+  <!-- The Modal -->
+<div class="modal" id="eventLikeUsers" >
+  <div class="modal-dialog" >
+    <div class="modal-content" style = "width:700px">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Event Likes</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" style="height: 363px;overflow-y: scroll;">
+          <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Image</th>
+      </tr>
+    </thead>
+    <?php $i=1 ?>
+    @foreach($userLikeslist as $eventlikes)
+    <tbody>
+      <tr>
+        <td>{{$i++}}</td>
+        <td>{{$eventlikes->name}}</td>
+        <td>{{$eventlikes->username}}</td>
+        <td>{{$eventlikes->email}}</td>
+        <td>
+         @if (!$eventlikes->image)
+            <img src="{{url('/images/'.'default.png')}}" class="img-circle" alt="No photo" style= "width:60px;height:60px;">
+            @else
+            <img src="{{url('/images/'.$eventlikes->image)}}" class="img-circle" alt="user Image" style= "width:60px;height:60px;">
+          @endif
+        </td>
+      </tr>
+    </tbody>
+    @endforeach
+  </table>
+  </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
   </div>
 @endsection

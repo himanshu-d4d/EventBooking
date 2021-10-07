@@ -6,12 +6,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 style = "margin-left:130px">New User</h1>
+            <h1 style = "margin-left:130px">New Event</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">New User</li>
+              <li class="breadcrumb-item active">New Event</li>
             </ol>
           </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="col-md-10" style = "margin-left:140px">
           <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">General</h3>
+              <h3 class="card-title">Create New</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -68,7 +68,7 @@
               </div>
               <div class="form-group">
                 <label for="inputName">Description</label><br />
-                <textarea id="w3review" name="description" rows="4" cols="50">
+                <textarea id="w3review" name="description" class="form-control" rows="4" cols="50">
                  </textarea>
                 @if ($errors->has('description')) <p class="alert-danger">{{ $errors->first('description') }}</p> @endif
               </div>
